@@ -53,7 +53,9 @@ app.whenReady().then(() => {
   if (process.env.ACP_DEV_URL) {
     win.loadURL(process.env.ACP_DEV_URL); // vite dev server
   } else {
-    win.loadFile(path.join(__dirname, "../dist/index.html"));
+    // Compiled panel build lives in the repo-root dist/panel/ folder
+    // (all compiled artifacts are consolidated there).
+    win.loadFile(path.join(__dirname, "../../dist/panel/index.html"));
   }
 });
 

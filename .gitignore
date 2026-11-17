@@ -17,3 +17,9 @@ Thumbs.db
 # 打包产物（仓库外分发用）
 *.tar.gz
 *.zip
+
+# 编译产物统一存放在顶层 dist/；子应用中间构建目录不入库
+panel/dist/
+panel/canvas-app/dist/
+panel/apexforge-app/dist/
+panel/mcp-docs-app/dist/

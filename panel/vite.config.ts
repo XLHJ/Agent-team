@@ -6,7 +6,9 @@ import react from "@vitejs/plugin-react";
 // Vendored sub-apps are standalone projects embedded via iframe.
 // Dev: each has its own vite dev server (/canvas-app -> 3002, /apexforge-app -> 5175)
 //      and the ApexForge NestJS API runs on 3000 (proxy /api/v1).
-// Build: their dist outputs are copied into dist/<name>/ next to the panel build.
+// Build: everything lands in the repo-root dist/panel/ folder (all compiled
+// artifacts are consolidated there); sub-app dists are copied into it too.
+const OUT_DIR = path.resolve(__dirname, "../dist/panel");
 function copySubApp(name: string): Plugin {
     return {
         name: `copy-${name}`,
@@ -14,7 +16,7 @@ function copySubApp(name: string): Plugin {
             // mcp-docs-app builds its client into <root>/dist/client; copy that.
             const rel = name === "mcp-docs-app" ? `${name}/dist/client` : `${name}/dist`;
             const src = path.resolve(__dirname, rel);
-            const dst = path.resolve(__dirname, `dist/${name}`);
+            const dst = path.join(OUT_DIR, name);
             if (existsSync(src)) {
                 cpSync(src, dst, { recursive: true });
             }
@@ -26,6 +28,10 @@ export default defineConfig(({ command }) => ({
   // Relative base so the built panel works inside Electron (file://).
   base: command === "build" ? "./" : "/",
   plugins: [react(), copySubApp("canvas-app"), copySubApp("apexforge-app"), copySubApp("mcp-docs-app")],
+  build: {
+    outDir: OUT_DIR,
+    emptyOutDir: true,
+  },
   // Dev server proxies to the local Hub; production runs inside Electron.
   server: {
     port: 5173,
