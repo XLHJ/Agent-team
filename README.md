@@ -30,11 +30,27 @@
 └── dist/           全部编译产物（单文件夹）
     ├── linux-amd64/     windows-amd64/
     ├── macos-amd64/     macos-arm64/
-    │    └── hub / diag / harness-runner / fakeagent / sidecar-sample / embedded-sample
+    │    └── hub / diag / harness-runner
     └── panel/           面板网页构建（含三个子应用）
 ```
 
 ## 快速开始
+
+### 方式一（推荐）：下载便携包，开箱即用
+
+到 [Releases](https://github.com/XLHJ/Agent-team/releases) 下载对应平台的 zip，解压后**双击 Agent++**（Windows: `Agent++.exe`；macOS: `Agent++.app`；Linux: `./Agent++`）即可——面板启动时会自动拉起内置 Hub（随机一次性令牌，数据保存在用户数据目录下的 `hub-state/`），无需任何配置。
+
+| 便携包 | 平台 |
+|---|---|
+| `agentpp-portable-windows-x64.zip` | Windows 10/11 x64 |
+| `agentpp-portable-linux-x64.zip` | Linux x64（解压后 `chmod +x Agent++`） |
+| `agentpp-portable-macos-x64.zip` | macOS Intel |
+| `agentpp-portable-macos-arm64.zip` | macOS Apple Silicon |
+
+> - 便携包内含完整面板 + Hub，**不含插件**；插件以源码形式放在仓库 `plugin-sdk/` 目录（embedded / sidecar 两种形态），按需自行编译接入，详见下文"接入 Agent"。
+> - macOS 首次打开如提示"无法验证开发者"，右键 → 打开，或在"系统设置 → 隐私与安全性"中允许。
+
+### 方式二：从源码运行
 
 **1. 启动 Hub**（以 Linux 为例，其他平台用 `dist/<平台>/hub`）：
 

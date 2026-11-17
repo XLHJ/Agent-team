@@ -13,7 +13,16 @@ function hubBinary() {
   const override = process.env.ACP_HUB_BIN;
   if (override) return override;
   const name = process.platform === "win32" ? "hub.exe" : "hub";
+  // Portable layout: hub sits next to the app (resources/app/bin).
+  const bundled = path.join(__dirname, "bin", name);
+  if (fs.existsSync(bundled)) return bundled;
+  // Dev layout (running from panel/electron inside the repo).
   return path.join(process.resourcesPath ?? path.join(__dirname, "../../hub"), name);
+}
+
+function bundledArg(flag, rel) {
+  const p = path.join(__dirname, rel);
+  return fs.existsSync(p) ? [flag, p] : [];
 }
 
 function readToken(stateDir) {
@@ -32,6 +41,8 @@ app.whenReady().then(() => {
     "-addr", "127.0.0.1:0", // placeholder; real port picked below
     "-token", token,
     "-state-dir", stateDir,
+    ...bundledArg("-schemas", "protocol/schemas"),
+    ...bundledArg("-signatures", "harness-sdk/detect/signatures"),
   ], { stdio: ["ignore", "pipe", "pipe"] });
   hub.stdout.on("data", (d) => {
     const m = /listening on 127\.0\.0\.1:(\d+)/.exec(String(d));
@@ -53,9 +64,12 @@ app.whenReady().then(() => {
   if (process.env.ACP_DEV_URL) {
     win.loadURL(process.env.ACP_DEV_URL); // vite dev server
   } else {
-    // Compiled panel build lives in the repo-root dist/panel/ folder
-    // (all compiled artifacts are consolidated there).
-    win.loadFile(path.join(__dirname, "../../dist/panel/index.html"));
+    // Portable/dev: dist/panel is bundled next to main.js in the app dir;
+    // in-repo dev runs fall back to the repo-root dist/panel.
+    const bundled = path.join(__dirname, "dist", "panel", "index.html");
+    win.loadFile(fs.existsSync(bundled)
+      ? bundled
+      : path.join(__dirname, "../../dist/panel/index.html"));
   }
 });
 
