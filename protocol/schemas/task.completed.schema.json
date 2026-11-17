@@ -1,0 +1,57 @@
+{
+  "$id": "https://agent-control-plane/protocol/0.1/task.completed.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "id": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "method": {
+      "const": "task.completed"
+    },
+    "params": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "raw_output": {
+          "type": "string"
+        },
+        "report": {
+          "type": "string"
+        },
+        "task_id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "raw_output"
+      ],
+      "type": "object"
+    },
+    "protocol_version": {
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "method",
+    "protocol_version",
+    "id",
+    "params"
+  ],
+  "title": "task.completed",
+  "type": "object"
+}

@@ -1,0 +1,36 @@
+{
+  "$id": "https://agent-control-plane/protocol/0.1/config.update.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "method": {
+      "const": "config.update"
+    },
+    "params": {
+      "additionalProperties": false,
+      "properties": {
+        "policy": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "policy"
+      ],
+      "type": "object"
+    },
+    "protocol_version": {
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "method",
+    "protocol_version",
+    "params"
+  ],
+  "title": "config.update",
+  "type": "object"
+}

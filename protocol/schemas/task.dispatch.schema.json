@@ -1,0 +1,59 @@
+{
+  "$id": "https://agent-control-plane/protocol/0.1/task.dispatch.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "method": {
+      "const": "task.dispatch"
+    },
+    "params": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_policy": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "input_context": {
+          "type": "string"
+        },
+        "prompt": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "report_prompt": {
+          "type": "string"
+        },
+        "task_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "timeout_ms": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "task_id",
+        "prompt",
+        "timeout_ms"
+      ],
+      "type": "object"
+    },
+    "protocol_version": {
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "method",
+    "protocol_version",
+    "params"
+  ],
+  "title": "task.dispatch",
+  "type": "object"
+}

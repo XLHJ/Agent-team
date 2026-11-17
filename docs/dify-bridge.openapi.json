@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Agent++ Hub Bridge",
+    "version": "1.0.0",
+    "description": "Bridge for Dify workflows to allocate tasks to agents registered in the Agent++ control panel. Auth: send the hub bootstrap token in the X-Hub-Token header (configure in the tool's auth settings)."
+  },
+  "servers": [
+    { "url": "http://127.0.0.1:8080" }
+  ],
+  "paths": {
+    "/bridge/v1/agents": {
+      "get": {
+        "operationId": "listAgents",
+        "summary": "列出可接收任务的 Agent",
+        "description": "Returns agents registered in the panel that declare the task.dispatch capability.",
+        "responses": {
+          "200": {
+            "description": "Agent list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": { "type": "integer" },
+                    "agents": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "instance_id": { "type": "string" },
+                          "agent_type": { "type": "string" },
+                          "conn_status": { "type": "string" },
+                          "capabilities": { "type": "array", "items": { "type": "string" } }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bridge/v1/dispatch": {
+      "post": {
+        "operationId": "dispatchTask",
+        "summary": "把任务派给指定 Agent",
+        "description": "wait=false returns task_id immediately (use getTask to poll). wait=true blocks until the task finishes (keep wait_timeout_s under Dify's HTTP-node timeout, default 100s).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["instance_id", "prompt"],
+                "properties": {
+                  "instance_id": { "type": "string", "description": "Target agent instance id (see listAgents)." },
+                  "prompt": { "type": "string", "description": "Task instruction text." },
+                  "timeout_ms": { "type": "integer", "description": "Agent-side task timeout, default 300000." },
+                  "wait": { "type": "boolean", "description": "true = synchronous; false = async." },
+                  "wait_timeout_s": { "type": "integer", "description": "Sync wait cap in seconds, default 90." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispatch result. Async: {task_id, state, ok}. Sync: full task view {task_id, state, ok, report/raw_output, error_*}; if still running after wait_timeout_s: {task_id, state, ok:false, timed_out:true}.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "task_id": { "type": "string" },
+                    "state": { "type": "string" },
+                    "ok": { "type": "boolean" },
+                    "timed_out": { "type": "boolean" },
+                    "report": { "type": "string" },
+                    "raw_output": { "type": "string" },
+                    "error_code": { "type": "string" },
+                    "error_message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "INSTANCE_NOT_FOUND" },
+          "403": { "description": "Capability not declared" },
+          "502": { "description": "DISPATCH_FAILED (agent connection unavailable)" }
+        }
+      }
+    },
+    "/bridge/v1/tasks/{task_id}": {
+      "get": {
+        "operationId": "getTask",
+        "summary": "查询任务状态与结果（异步轮询用）",
+        "parameters": [
+          { "name": "task_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task view; state is one of dispatched/running/waiting_approval/completed/failed/canceled.",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "404": { "description": "TASK_NOT_FOUND" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+signatures:
+  - name: dsh
+    display_name: DSH CLI
+    executables: [dsh, dsh.cmd, dsh.exe]
+    version_args: ["--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    methods: [pty]
+    approval_mode: ""
+    args: []

@@ -1,0 +1,19 @@
+# 依赖
+node_modules/
+
+# 构建临时物
+*.log
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+.vite/
+
+# 运行时数据（SQLite 状态库等，不入库）
+*.db
+*.db-shm
+*.db-wal
+/state/
+
+# 打包产物（仓库外分发用）
+*.tar.gz
+*.zip

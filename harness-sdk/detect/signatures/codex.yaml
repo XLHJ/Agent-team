@@ -1,0 +1,10 @@
+signatures:
+  - name: codex
+    display_name: Codex CLI
+    executables: [codex, codex.cmd, codex.exe]
+    version_args: ["--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    methods: [native, stdio]
+    native: stdio
+    approval_mode: tool_hook
+    args: ["exec", "--json", "-"]

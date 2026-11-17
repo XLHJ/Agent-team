@@ -1,0 +1,10 @@
+signatures:
+  - name: hermes
+    display_name: Hermes CLI
+    executables: [hermes, hermes.cmd, hermes.exe]
+    version_args: ["--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    methods: [native, stdio, pty]
+    native: stdio
+    approval_mode: native_forward
+    args: []

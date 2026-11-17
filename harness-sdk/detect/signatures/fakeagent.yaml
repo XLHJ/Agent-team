@@ -1,0 +1,9 @@
+signatures:
+  - name: fakeagent
+    display_name: Fake Agent
+    executables: [fakeagent]
+    version_args: ["--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    methods: [stdio]
+    approval_mode: ""
+    args: []

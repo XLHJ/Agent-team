@@ -1,0 +1,9 @@
+signatures:
+  - name: claude-code
+    display_name: Claude Code
+    executables: [claude, claude.cmd, claude.exe]
+    version_args: ["--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    methods: [stdio]
+    approval_mode: tool_hook
+    args: ["-p", "--output-format", "stream-json", "--input-format", "stream-json", "--verbose"]

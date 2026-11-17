@@ -1,0 +1,50 @@
+{
+  "$id": "https://agent-control-plane/protocol/0.1/plugin.registered.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "method": {
+      "const": "plugin.registered"
+    },
+    "params": {
+      "additionalProperties": false,
+      "properties": {
+        "instance_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "policy": {
+          "type": "object"
+        },
+        "server_time": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "session_token": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "instance_id",
+        "session_token",
+        "server_time"
+      ],
+      "type": "object"
+    },
+    "protocol_version": {
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "method",
+    "protocol_version",
+    "params"
+  ],
+  "title": "plugin.registered",
+  "type": "object"
+}

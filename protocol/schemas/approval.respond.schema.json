@@ -1,0 +1,51 @@
+{
+  "$id": "https://agent-control-plane/protocol/0.1/approval.respond.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "method": {
+      "const": "approval.respond"
+    },
+    "params": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "deny",
+            "modify"
+          ]
+        },
+        "modified_params": {
+          "type": "object"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "approval_id",
+        "decision"
+      ],
+      "type": "object"
+    },
+    "protocol_version": {
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "method",
+    "protocol_version",
+    "params"
+  ],
+  "title": "approval.respond",
+  "type": "object"
+}

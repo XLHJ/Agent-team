@@ -1,0 +1,81 @@
+{
+  "$id": "https://agent-control-plane/protocol/0.1/usage.report.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "usage.report frame",
+  "description": "Task-level usage summary reported by the plugin when a task ends. One report per task, containing one entry per model invocation made during the task. Decoupled from task status: accepted regardless of whether the task completed or failed. Purely observational - no billing or pricing logic.",
+  "properties": {
+    "id": {
+      "type": ["integer", "string"]
+    },
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "method": {
+      "const": "usage.report"
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Identifier of the task this usage belongs to."
+        },
+        "instance_id": {
+          "type": "string",
+          "description": "Optional plugin instance that produced the calls; defaults to the registered sender."
+        },
+        "calls": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Per-model invocation details for the task.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Model name, e.g. dsv4.1, gpt-6-sol."
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Model source label, e.g. official, relay-station-A. No built-in pricing dictionary; the label is stored as-is."
+              },
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Prompt/input tokens consumed."
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Completion/output tokens consumed."
+              },
+              "ttft_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Time to first token in milliseconds."
+              },
+              "tokens_per_s": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Generation speed in tokens per second."
+              },
+              "duration_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Total invocation wall time in milliseconds."
+              }
+            },
+            "required": ["model", "source", "input_tokens", "output_tokens", "ttft_ms", "tokens_per_s", "duration_ms"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["task_id", "calls"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["jsonrpc", "method", "params"]
+}

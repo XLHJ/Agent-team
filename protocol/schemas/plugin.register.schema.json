@@ -1,0 +1,75 @@
+{
+  "$id": "https://agent-control-plane/protocol/0.1/plugin.register.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "id": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "method": {
+      "const": "plugin.register"
+    },
+    "params": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_type": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "agent_version": {
+          "type": "string"
+        },
+        "capabilities": {
+          "items": {
+            "enum": [
+              "observe",
+              "task.dispatch",
+              "session.interrupt",
+              "approval",
+              "report.generate"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "instance_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "protocol_version": {
+          "pattern": "^[0-9]+\\.[0-9]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent_type",
+        "instance_id",
+        "protocol_version",
+        "capabilities"
+      ],
+      "type": "object"
+    },
+    "protocol_version": {
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "jsonrpc",
+    "method",
+    "protocol_version",
+    "id",
+    "params"
+  ],
+  "title": "plugin.register",
+  "type": "object"
+}

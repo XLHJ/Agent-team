@@ -1,0 +1,9 @@
+signatures:
+  - name: zcode
+    display_name: ZCode CLI
+    executables: [zcode, zcode.cmd, zcode.exe]
+    version_args: ["--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    methods: [pty]
+    approval_mode: ""
+    args: []
